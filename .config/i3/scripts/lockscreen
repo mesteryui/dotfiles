@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Take a screenshot of the display and use it as lockscreen
+# Betterlockscreen is used for locking the screen and blurring the image
+
+IMAGE=/tmp/i3lock.png
+
+# Take the screenshot
+scrot "$IMAGE"
+
+# Set the lockscreen with some blur
+betterlockscreen -u "$IMAGE" --fx blur
+
+# Lock the screen using some blur
+betterlockscreen -l blur
+
+# Remove the tmp image
+rm $IMAGE
