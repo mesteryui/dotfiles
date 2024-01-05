@@ -20,5 +20,6 @@ require "paq" {
     "catppuccin/nvim",
     "nvim-lua/plenary.nvim",
     "nvimdev/dashboard-nvim",
-    "nvim-telescope/telescope.nvim"
+    "nvim-telescope/telescope.nvim",
+    "NeogitOrg/neogit"
 }

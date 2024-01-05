@@ -8,6 +8,8 @@ local ag = vim.api.nvim_create_augroup -- create autogroup
 local au = vim.api.nvim_create_autocmd -- create autocomand
 local cmp = require'cmp'
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local neogit = require('neogit')
+neogit.setup {}
 -- spell
 --exec ([[
 --    augroup markdownSpell
@@ -103,6 +105,10 @@ require('lualine-plugin')
 --require('vimtex').setup()---
 require('gitsigns').setup()
 -------------Telescope----------------------
+telescope = {
+    enabled = true,
+    --style = "nvchad"
+}
 require('telescope').setup()
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
@@ -115,7 +121,8 @@ require('orgmode').setup_ts_grammar({
       org_default_notes_file = '~/org/notes.org',
     })
 require("dashboard").setup()
-require("catppuccin").setup { integrations = {
+require("catppuccin").setup { 
+     integrations = {
 	treesitter = true,
 	cmp = true,
 	markdown = true,
@@ -133,7 +140,7 @@ require('nvim-treesitter').setup {
     additional_vim_regex_highlighting = {'org'},
     additional_vim_regex_highlighting = {'latex'},
   },
-   ensure_installed = {'org'}, -- Or run :TSUpdate org
+ --  ensure_installed = {'org'}, -- Or run :TSUpdate org
 }
 -- setup must be called before loading
 vim.cmd.colorscheme "catppuccin"
