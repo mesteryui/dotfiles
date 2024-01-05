@@ -39,7 +39,6 @@ opt.foldlevel = 99            -- should open all folds
 opt.conceallevel = 0
 opt.termguicolors = true
 opt.guifont = "JetBrainsMono Nerd Font"
-
 -- Configuraciones Autocompletado --
 native_lsp = {
     enabled = true,
@@ -73,7 +72,7 @@ cmp.setup({
        completion = cmp.config.window.bordered(),
       -- documentation = cmp.config.window.bordered(),
     },
-     mapping = cmp.mapping.preset.insert({
+    mapping = cmp.mapping.preset.insert({
       ['<C-b>'] = cmp.mapping.scroll_docs(-4),
       ['<C-f>'] = cmp.mapping.scroll_docs(4),
       ['<TAB>'] = cmp.mapping.complete(),
@@ -83,10 +82,10 @@ cmp.setup({
     
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
-      { name = 'vsnip' }, -- For vsnip users.
+     -- { name = 'vsnip' }, -- For vsnip users.
        { name = 'luasnip' }, -- For luasnip users.
-       { name = 'ultisnips' }, -- For ultisnips users.
-       { name = 'snippy' }, -- For snippy users.
+      -- { name = 'ultisnips' }, -- For ultisnips users.
+      -- { name = 'snippy' }, -- For snippy users.
         { name = 'orgmode'}
     }, {
       { name = 'buffer' },
@@ -116,7 +115,7 @@ require('orgmode').setup_ts_grammar({
       org_default_notes_file = '~/org/notes.org',
     })
 require("dashboard").setup()
-require("catppuccin").setup{ integrations = {
+require("catppuccin").setup { integrations = {
 	treesitter = true,
 	cmp = true,
 	markdown = true,
@@ -124,7 +123,7 @@ require("catppuccin").setup{ integrations = {
         dashboard = true,
  }
 }
-require('nvim-treesitter.configs').setup {
+require('nvim-treesitter').setup {
   -- If TS highlights are not enabled at all, or disabled via `disable` prop,
   -- highlighting will fallback to default Vim syntax highlighting
   highlight = {
@@ -134,7 +133,7 @@ require('nvim-treesitter.configs').setup {
     additional_vim_regex_highlighting = {'org'},
     additional_vim_regex_highlighting = {'latex'},
   },
-  ensure_installed = {'org'}, -- Or run :TSUpdate org
+   ensure_installed = {'org'}, -- Or run :TSUpdate org
 }
 -- setup must be called before loading
 vim.cmd.colorscheme "catppuccin"
