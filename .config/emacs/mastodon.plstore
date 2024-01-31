@@ -1,0 +1,6 @@
+;;; public entries -*- mode: plstore -*- 
+(("active-user" :username "@mester@im-in.space@im-in.space" :instance "https://im-in.space" :client_id "iXMD1ZpbRn9d4lSSPT2WeIoJzRVhWVaZRMXTptNsKTk" :client_secret "k1SRdCf9yf743GNZjB6EJf7A2AElsDkp8Vx0KafnUus" :access_token "eTcYiaV2jtlOlx7Hl2W7DqQtaW98tf-egVw4iITTEUQ")
+ ("user-@mester@im-in.space@im-in.space" :username "@mester@im-in.space@im-in.space" :instance "https://im-in.space" :client_id "iXMD1ZpbRn9d4lSSPT2WeIoJzRVhWVaZRMXTptNsKTk" :client_secret "k1SRdCf9yf743GNZjB6EJf7A2AElsDkp8Vx0KafnUus" :access_token "eTcYiaV2jtlOlx7Hl2W7DqQtaW98tf-egVw4iITTEUQ")
+ ("mastodon-https://im-in.space" :id "28042" :name "mastodon.el" :website "https://codeberg.org/martianh/mastodon.el" :scopes
+  ["read" "write" "follow"]
+  :redirect_uri "urn:ietf:wg:oauth:2.0:oob" :client_id "iXMD1ZpbRn9d4lSSPT2WeIoJzRVhWVaZRMXTptNsKTk" :client_secret "k1SRdCf9yf743GNZjB6EJf7A2AElsDkp8Vx0KafnUus" :vapid_key "BGcaKVyVrI2ddlDXndBkkS6pDkHSnqjrSA5arn_-kVXwZ-AMB31AXXl8Jt35neFPGquAHRazEW_Ahboxof_ALvQ="))

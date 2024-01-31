@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: postamble
+# key: postamble
+# --
+#+options: html-postamble:nil

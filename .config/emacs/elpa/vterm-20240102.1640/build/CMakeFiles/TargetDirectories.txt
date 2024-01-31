@@ -1,0 +1,4 @@
+/home/oscar/.config/emacs/elpa/vterm-20240102.1640/build/CMakeFiles/vterm-module.dir
+/home/oscar/.config/emacs/elpa/vterm-20240102.1640/build/CMakeFiles/run.dir
+/home/oscar/.config/emacs/elpa/vterm-20240102.1640/build/CMakeFiles/edit_cache.dir
+/home/oscar/.config/emacs/elpa/vterm-20240102.1640/build/CMakeFiles/rebuild_cache.dir
