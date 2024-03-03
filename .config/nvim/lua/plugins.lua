@@ -21,5 +21,8 @@ require "paq" {
     "nvim-lua/plenary.nvim",
     "nvimdev/dashboard-nvim",
     "nvim-telescope/telescope.nvim",
-    "NeogitOrg/neogit"
+    "NeogitOrg/neogit",
+    "windwp/nvim-autopairs",
+    'nanozuki/tabby.nvim',
+    'kaarmu/typst.vim'
 }

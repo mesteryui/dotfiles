@@ -1,1 +1,5 @@
-nil
+((emoji--command-Emoji nil)
+ (emoji--command-Emoji\ >\ Objects nil)
+ (emoji--command-Emoji\ >\ Objects\ >\ office nil)
+ (magit-commit nil)
+ (magit-push nil))

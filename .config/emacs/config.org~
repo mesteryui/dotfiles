@@ -113,7 +113,8 @@
     (use-package org
        :config
         (setq org-directory "~/org/")
-        (setq org-agenda-files '("~/org/agenda.org" "~/org/diario-inbox.org"))
+        (setq org-agenda-files '("~/org/agenda.org"))
+        (setq org-archive-location "~/org/%s_archivo.org::datetree/")
         (setq org-todo-keywords
      '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
         :bind
@@ -133,6 +134,13 @@
 
 
 #+end_src
+
+** Org auto-tangle
+#+BEGIN_SRC emacs-lisp
+      (use-package org-auto-tangle
+      :defer t
+      :hook (org-mode . org-auto-tangle-mode))
+#+END_SRC
 ** Org Superstar
 #+begin_src emacs-lisp
   (use-package org-superstar
@@ -176,7 +184,7 @@
      (plist-put org-format-latex-options :background 'auto)))
     (use-package ox-epub
     :demand t)
-  
+  (use-package ox-reveal)
      #+end_src
 ** Ajustes exportacion LaTeX
 #+begin_src emacs-lisp
@@ -198,6 +206,14 @@
                            "tex" "bcf"))))
   #+end_src
 * Paquetes
+** Organizer
+Es un sistema de organización propio desarrollado en *Elisp* razonablemente, el cual utiliza org mode
+#+BEGIN_SRC emacs-lisp
+    ;;(add-to-list 'load-path "~/.config/emacs/plugins")
+  (global-set-key (kbd "C-c o") 'org-agenda-open-link)
+    (load-file "~/.config/emacs/plugins/organizer.el")
+  (global-set-key (kbd "<f12>")  'organizer-index)
+#+end_src
 ** Nerd Icons
 Soporte de iconos usando interfaz gráfica y terminal
 #+begin_src emacs-lisp
@@ -292,7 +308,6 @@ Mejorar la linea inferior de Emacs usando la que utiliza el framework de configu
     :bind (("C-;" . flyspell-auto-correct-previous-word)
            ("<f7>" . flyspell-correct-wrapper)))
 #+end_src
-** Company
 #+begin_src emacs-lisp
   (use-package company
   :custom
@@ -450,13 +465,14 @@ Modo para habilitar el resaltado de sintaxis en el archivo de configuración de 
 #+END_SRC
 ** Vterm
 #+BEGIN_SRC emacs-lisp
-      (use-package vterm
-      :bind
-      (:map
-       vterm-mode-map
-       ("C-y" . vterm-yank)
-       ("C-q" . vterm-send-next-key)))
-      (use-package vterm-toggle)
+  (use-package vterm
+  :bind
+  (:map
+   vterm-mode-map
+   ("C-y" . vterm-yank)
+   ("C-q" . vterm-send-next-key)))
+  (use-package vterm-toggle)
+  (global-set-key (kbd "C-c g") 'vterm-toggle)
 #+END_SRC
 
 ** Calfw
@@ -473,22 +489,7 @@ Para configurar un calendario
   (setq cfw:org-overwrite-default-keybinding t)
   :bind ([f8] . cfw:open-org-calendar))
 #+END_SRC
-** Org caldav
-Para sincronizar org mode con el calendario
-#+BEGIN_SRC emacs-lisp
-    (use-package org-caldav
-    :bind ([f4] . org-caldav-sync)
-    :config
-    (setq org-caldav-url "https://cloud.disroot.org/remote.php/dav/calendars/mester")
-     (setq org-caldav-calendars
-      '((:calendar-id "personal"
-                      :files ("~/org/agenda.org")
-                      :inbox "~/org/diario-inbox.org")))
-      (setq org-caldav-backup-file "~/org/calendario/org-caldav-backup.org")
-  (setq org-caldav-save-directory "~/org/calendario/")
-  (setq org-icalendar-alarm-time 1))
-#+END_SRC
-
+**
 ** Mastodon
 #+BEGIN_SRC emacs-lisp
   (use-package mastodon)
@@ -497,6 +498,37 @@ Para sincronizar org mode con el calendario
 (setq mastodon-tl--highlight-current-toot 1)
 #+END_SRC
 ** Mu4e
+** Eshell
+#+begin_src emacs-lisp
+    (use-package eshell
+      :ensure t)
+    (use-package eshell-toggle
+    :ensure t
+    :custom
+  (eshell-toggle-size-fraction 3))
+
+    (use-package eshell-syntax-highlighting
+      :after esh-mode
+      :config
+      (eshell-syntax-highlighting-global-mode +1))
+    (global-set-key (kbd "C-c t") 'eshell-toggle)
+#+end_src
+** Dired Sidebar
+#+begin_src emacs-lisp
+  (use-package dired-sidebar
+    :ensure t
+    :defer t
+    :commands (dired-sidebar-toggle-sidebar)
+    :init
+    (setq dired-sidebar-theme 'nerd)
+    (setq dired-sidebar-use-term-integration t)
+    (setq dired-sidebar-use-custom-font t))
+
+  (use-package dired-git
+    :ensure t)
+(global-set-key (kbd "C-c s") 'dired-sidebar-toggle-sidebar)
+#+end_src
+
 ** Configuracion para lenguajes de programación
 *** LSP Mode
 Sirve para configurar el servidor lsp en emacs
@@ -505,10 +537,27 @@ Sirve para configurar el servidor lsp en emacs
   :ensure t
   :hook (typescript-mode . lsp)
   :commands lsp)
+  (use-package consult-lsp
+    :ensure t)
+  (use-package lsp-ui)
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+
 #+END_SRC
 *** Typescript
 #+BEGIN_SRC emacs-lisp
-    (use-package typescript-mode
-    :ensure t))
-    (add-to-list 'auto-mode-alist '("\.ts\'" . typescript-mode)
+  (use-package typescript-mode
+  :ensure t)
+  (add-hook 'typescript-mode-hook #'lsp-deferred)
+  (add-to-list 'auto-mode-alist '("\.ts\'" . typescript-mode))
+  (add-to-list 'auto-mode-alist '("\.tsx\'" . typescript-mode))
+  
+#+END_SRC
+
+** Hledger
+Hledger es un software para llevar la contabilidad a traves de un fichero de texto plano
+#+BEGIN_SRC emacs-lisp
+(use-package hledger-mode
+  :ensure t
+  :mode ("\\.journal\\'" "\\.hledger\\'")
+  :commands hledger-enable-reporting)
 #+END_SRC

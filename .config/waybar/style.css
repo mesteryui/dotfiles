@@ -3,15 +3,13 @@
     /* `otf-font-awesome` is required to be installed for icons */
     font-family: FontAwesome, Roboto, Helvetica, Arial, sans-serif;
     font-size: 13px;
-    color: @text;
+   /* color: @text; */
 }
 
 window#waybar {
     background-color: shade(@base, 0.9);
     border: 2px solid alpha(@crust, 0.3);
     /*color: #ffffff;*/
-    transition-property: background-color;
-    transition-duration: .5s;
 }
 
 window#waybar.hidden {
@@ -51,18 +49,20 @@ button:hover {
 }
 
 #workspaces button {
+    color: shade(@text, 0.9);
     padding: 0 5px;
     background-color: transparent;
-
-}
+   }
 
 #workspaces button:hover {
     background: shade(@surface1, 0.9);
+    
 }
 
-#workspaces button.focused {
-    background-color: shade(@mauve, 0.9);
+#workspaces button.focused { 
+    background-color: shade(@pink, 0.9);
     box-shadow: inset 0 -3px #ffffff;
+    color: shade(@mantle, 0.9) 
 }
 
 #workspaces button.urgent {
@@ -124,7 +124,7 @@ button:hover {
 @keyframes blink {
     to {
         background-color: shade(@crust, 0.9);
-        color: shade(@mantle,0.9);
+        color: shade(@text,0.9);
     }
 }
 
@@ -207,7 +207,7 @@ label:focus {
 }
 
 #tray {
-    background-color: shade(@surface0 ,0.9);
+    background-color: shade(@mantle ,0.9);
 }
 
 #tray > .passive {

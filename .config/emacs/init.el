@@ -1,10 +1,23 @@
 (setq user-full-name "Oscar")
-(setq inhibit-startup-message t
-      use-short-answers t)
-  (tool-bar-mode -1)                                            ; Desactivar la barra de herramientas
-  (menu-bar-mode -1)                                            ; Desactivar la barra de menús
-  (scroll-bar-mode -1)                                          ; Desactivar la barra de desplazamiento visible
-  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+  (setq inhibit-startup-message t
+        use-short-answers t)
+    (tool-bar-mode -1)                                            ; Desactivar la barra de herramientas
+    (menu-bar-mode -1)                                            ; Desactivar la barra de menús
+    (scroll-bar-mode -1)                                          ; Desactivar la barra de desplazamiento visible
+    (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(setq
+ display-time-24hr-format t              ; Muestra el reloj en formato 24 hrs
+ display-time-format "%H:%M"             ; Le da formato a la hora
+ load-prefer-newer t                     ; Prefiere la versión más reciente de un archivo.
+ select-enable-clipboard t               ; Sistema de fusión y portapapeles de Emacs.
+ vc-follow-symlinks t                    ; Siempre sigue los enlaces simbólicos.
+  make-backup-files nil                ; No realiza backups de ficheros
+ auto-save-default nil                   ; Deshabilita #file#
+ ;; org-footnote-section "Referencias:"  ; cambio footnotes por referencias
+ ;; global-hl-line-mode t                ; Highlight current line
+ kill-ring-max 128                       ; Longitud máxima del anillo de matar
+ create-lockfiles nil                    ; Impido la creación de ficheros .#
+ )
 
 (set-face-attribute 'default nil
   :font "JetBrains Mono NerdFont"
@@ -78,7 +91,7 @@
 (use-package catppuccin-theme
   :ensure t
   :config
-(load-theme 'catppuccin :no-confirm))
+  (load-theme 'catppuccin :no-confirm))
 
 (require 'org-tempo)
   (setq-default org-startup-indented t
@@ -93,7 +106,8 @@
   (use-package org
      :config
       (setq org-directory "~/org/")
-      (setq org-agenda-files '("~/org/agenda.org" "~/org/diario-inbox.org"))
+      (setq org-agenda-files '("~/org/agenda.org"))
+      (setq org-archive-location "~/org/%s_archivo.org::datetree/")
       (setq org-todo-keywords
    '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
       :bind
@@ -110,6 +124,10 @@
       (org-export-with-toc nil)
       (org-export-with-smart-quotes t)
       (org-export-date-timestamp-format "%d %B %Y"))
+
+(use-package org-auto-tangle
+:defer t
+:hook (org-mode . org-auto-tangle-mode))
 
 (use-package org-superstar
      :ensure t
@@ -150,6 +168,7 @@
    (plist-put org-format-latex-options :background 'auto)))
   (use-package ox-epub
   :demand t)
+(use-package ox-reveal)
 
 (use-package ox-latex
                 :ensure nil
@@ -167,6 +186,11 @@
                          "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk"
                          "blg" "brf" "fls" "entoc" "ps" "spl" "bbl"
                          "tex" "bcf"))))
+
+;;(add-to-list 'load-path "~/.config/emacs/plugins")
+(global-set-key (kbd "C-c o") 'org-agenda-open-link)
+  (load-file "~/.config/emacs/plugins/organizer.el")
+(global-set-key (kbd "<f12>")  'organizer-index)
 
 (use-package nerd-icons
   ;; :custom
@@ -380,6 +404,7 @@
  ("C-y" . vterm-yank)
  ("C-q" . vterm-send-next-key)))
 (use-package vterm-toggle)
+(global-set-key (kbd "C-c g") 'vterm-toggle)
 
 (use-package calfw
   :config
@@ -392,22 +417,36 @@
   (setq cfw:org-overwrite-default-keybinding t)
   :bind ([f8] . cfw:open-org-calendar))
 
-(use-package org-caldav
-  :bind ([f4] . org-caldav-sync)
-  :config
-  (setq org-caldav-url "https://cloud.disroot.org/remote.php/dav/calendars/mester")
-   (setq org-caldav-calendars
-    '((:calendar-id "personal"
-                    :files ("~/org/agenda.org")
-                    :inbox "~/org/diario-inbox.org")))
-    (setq org-caldav-backup-file "~/org/calendario/org-caldav-backup.org")
-(setq org-caldav-save-directory "~/org/calendario/")
-(setq org-icalendar-alarm-time 1))
-
 (use-package mastodon)
 (setq mastodon-instance-url "https://im-in.space"
       mastodon-active-user "@mester@im-in.space")
 (setq mastodon-tl--highlight-current-toot 1)
+
+(use-package eshell
+    :ensure t)
+  (use-package eshell-toggle
+  :ensure t
+  :custom
+(eshell-toggle-size-fraction 3))
+
+  (use-package eshell-syntax-highlighting
+    :after esh-mode
+    :config
+    (eshell-syntax-highlighting-global-mode +1))
+  (global-set-key (kbd "C-c t") 'eshell-toggle)
+
+(use-package dired-sidebar
+    :ensure t
+    :defer t
+    :commands (dired-sidebar-toggle-sidebar)
+    :init
+    (setq dired-sidebar-theme 'nerd)
+    (setq dired-sidebar-use-term-integration t)
+    (setq dired-sidebar-use-custom-font t))
+
+  (use-package dired-git
+    :ensure t)
+(global-set-key (kbd "C-c s") 'dired-sidebar-toggle-sidebar)
 
 (use-package lsp-mode
 :ensure t
@@ -415,8 +454,16 @@
 :commands lsp)
 (use-package consult-lsp
   :ensure t)
+(use-package lsp-ui)
+(add-hook 'lsp-mode-hook 'lsp-ui-mode)
 
 (use-package typescript-mode
-:ensure t
-:config
-(add-to-list 'auto-mode-alist '("\.ts\'" . typescript-mode)))
+:ensure t)
+(add-hook 'typescript-mode-hook #'lsp-deferred)
+(add-to-list 'auto-mode-alist '("\.ts\'" . typescript-mode))
+(add-to-list 'auto-mode-alist '("\.tsx\'" . typescript-mode))
+
+(use-package hledger-mode
+  :ensure t
+  :mode ("\\.journal\\'" "\\.hledger\\'")
+  :commands hledger-enable-reporting)

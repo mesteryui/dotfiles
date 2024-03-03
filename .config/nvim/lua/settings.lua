@@ -6,7 +6,8 @@ local opt = vim.opt                    -- global/buffer/windows-scoped options
 local api = vim.api                    -- call Vim api
 local ag = vim.api.nvim_create_augroup -- create autogroup
 local au = vim.api.nvim_create_autocmd -- create autocomand
-local cmp = require'cmp'
+local cmp = require('cmp')
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local neogit = require('neogit')
 neogit.setup {}
@@ -88,7 +89,7 @@ cmp.setup({
        { name = 'luasnip' }, -- For luasnip users.
       -- { name = 'ultisnips' }, -- For ultisnips users.
       -- { name = 'snippy' }, -- For snippy users.
-        { name = 'orgmode'}
+       { name = 'orgmode' }
     }, {
       { name = 'buffer' },
     })
@@ -96,6 +97,15 @@ cmp.setup({
 require('lspconfig')['pyright'].setup {
     capabilities = capabilities
   }
+require('lspconfig')['tsserver'].setup {
+   capabilities = capabilities
+}
+require'lspconfig'.typst_lsp.setup{
+	settings = {
+		exportPdf = "onType" -- Choose onType, onSave or never.
+        -- serverPath = "" -- Normally, there is no need to uncomment it.
+	}
+}
 --Snippets--
 require("luasnip.loaders.from_vscode").lazy_load()
 ---Plugins---
@@ -104,6 +114,11 @@ require('lualine-plugin')
 --require('LuaSnip').setup()
 --require('vimtex').setup()---
 require('gitsigns').setup()
+--- Configuraciones diversas para cmp-------
+cmp.event:on(
+  'confirm_done',
+  cmp_autopairs.on_confirm_done()
+)
 -------------Telescope----------------------
 telescope = {
     enabled = true,
@@ -116,10 +131,8 @@ vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 --------------------------------------------
-require('orgmode').setup_ts_grammar({
-      org_agenda_files = '~/org/agenda.org',
-      org_default_notes_file = '~/org/notes.org',
-    })
+require('orgmode').setup_ts_grammar()
+
 require("dashboard").setup()
 require("catppuccin").setup { 
      integrations = {
@@ -128,8 +141,60 @@ require("catppuccin").setup {
 	markdown = true,
 	gitsigns = true,
         dashboard = true,
+	neogit = true,
  }
 }
+local theme = {
+  fill = 'TabLineFill',
+  -- Also you can do this: fill = { fg='#f2e9de', bg='#907aa9', style='italic' }
+  head = 'TabLine',
+  current_tab = 'TabLineSel',
+  tab = 'TabLine',
+  win = 'TabLine',
+  tail = 'TabLine',
+}
+require('tabby.tabline').set(function(line)
+  return {
+    {
+      { '  ', hl = theme.head },
+      line.sep('', theme.head, theme.fill),
+    },
+    line.tabs().foreach(function(tab)
+      local hl = tab.is_current() and theme.current_tab or theme.tab
+      return {
+        line.sep('', hl, theme.fill),
+        tab.is_current() and '' or '󰆣',
+        tab.number(),
+        tab.name(),
+        tab.close_btn(''),
+        line.sep('', hl, theme.fill),
+        hl = hl,
+        margin = ' ',
+      }
+    end),
+    line.spacer(),
+    line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
+      return {
+        line.sep('', theme.win, theme.fill),
+        win.is_current() and '' or '',
+        win.buf_name(),
+        line.sep('', theme.win, theme.fill),
+        hl = theme.win,
+        margin = ' ',
+      }
+    end),
+    {
+      line.sep('', theme.tail, theme.fill),
+      { '  ', hl = theme.tail },
+    },
+    hl = theme.fill,
+  }
+end)
+vim.api.nvim_set_keymap("n", "<leader>ta", ":$tabnew<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>tc", ":tabclose<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>to", ":tabonly<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>tn", ":tabn<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>tp", ":tabp<CR>", { noremap = true })
 require('nvim-treesitter').setup {
   -- If TS highlights are not enabled at all, or disabled via `disable` prop,
   -- highlighting will fallback to default Vim syntax highlighting
@@ -140,7 +205,11 @@ require('nvim-treesitter').setup {
     additional_vim_regex_highlighting = {'org'},
     additional_vim_regex_highlighting = {'latex'},
   },
- --  ensure_installed = {'org'}, -- Or run :TSUpdate org
+   ensure_installed = {'org'}, -- Or run :TSUpdate org
 }
+require('orgmode').setup({
+	org_agenda_files = '~/org/agenda.org',
+	org_default_notes_file = '~/org/notes.org',
+})
 -- setup must be called before loading
 vim.cmd.colorscheme "catppuccin"

@@ -16,11 +16,12 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term kitty
+set $term wezterm
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu rofi -show drun 
+set $menu ~/.config/rofi/bin/launcher
+
 for_window [title="^.*"] border pixel 2, title_format "%class >> %title"
 ### Appearance
 # target                 title     bg    text   indicator  border
@@ -34,7 +35,7 @@ client.background        $base
 corner_radius 10
 
 # Window background blur
-blur enabled
+blur enable
 blur_xray enable
 blur_passes 2
 blur_radius 3
@@ -56,8 +57,7 @@ scratchpad_minimize disable
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 #output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
-output * bg ~/Bildoj/Wallpapers/a1c14f61d9d6c1427955a15e3c5afaeb05f8df195499574c06f1c2895c746dd8_mocha.png fill
-#
+output * bg ~/Imágenes/Wallpapers/anime-girl-sad-pink-3840x2160-9296.jpg fill
 # Example configuration:
 #
 #   output HDMI-A-1 resolution 1920x1080 position 1920,0
@@ -77,9 +77,7 @@ output * bg ~/Bildoj/Wallpapers/a1c14f61d9d6c1427955a15e3c5afaeb05f8df195499574c
 # your displays after another 300 seconds, and turn your screens back on when
 # resumed. It will also lock your screen before your computer goes to sleep.
 exec swayidle -w timeout 300 \
-   'swaylock --screenshots --effect-blur 7x5 --clock --indicator --indicator-thickness 7 --ring-color fab387 --key-hl-color a6e3a --indicator-radius 99 --effect-vignette 1:1' \
-     timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-          before-sleep 'swaylock -f -c 000000'
+   'swaylock --screenshots --effect-blur 7x5 --clock --indicator --indicator-thickness 7 --ring-color fab387 --key-hl-color a6e3a --indicator-radius 99 --effect-vignette 1:1 --text-color cdd6f4'
 ### Input configuration
 #
 # Example configuration:
@@ -242,7 +240,7 @@ bar {
     swaybar_command waybar
     position top
 }
-#layer_effects "waybar" blur enable; shadows enable corner_radius 15
+layer_effects 'waybar' blur enable; shadows true; corner_radius 17
 input * {
     xkb_layout "es"
 }
@@ -255,11 +253,10 @@ exec_always --no-startup-id dunst
 
 include /etc/sway/config.d/*
 # Atajos de teclado personalizados
-bindsym $mod+b exec firefox
+bindsym $mod+b exec waterfox
 bindsym $mod+e exec emacs
 bindsym Print exec grim -g "$(slurp)" "$(xdg-user-dir PICTURES)/$(date +%Y-%m-%dT%H-%M-%S).jpg"
 bindsym $alt+e exec rofimoji
-bindsym $alt+Tab exec rofi -show window
 # Ajustes de audio
 set $refresh_waybar killall -SIGUSR1 waybar
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
