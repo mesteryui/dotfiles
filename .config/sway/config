@@ -267,7 +267,8 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 # Ajustes brillo
 bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +2%
 bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 2%-
-
+# Ajustes polkit 
+exec "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
 # Ajustes GTK
 exec_always import-gsettings \
     gtk-theme:gtk-theme-name \
